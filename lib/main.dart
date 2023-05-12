@@ -57,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final Color oddItemColor = colorScheme.primary.withOpacity(0.05);
+    final ButtonStyle style = TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.onPrimary);
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
@@ -65,8 +66,38 @@ class _MyHomePageState extends State<MyHomePage> {
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         scrolledUnderElevation: scrolledUnderElevation,
         shadowColor: shadowColor ? Theme.of(context).colorScheme.shadow : null,
+        actions: <Widget>[
+          TextButton(
+            style: style,
+            onPressed: () {},
+            child: const Icon(
+              Icons.search,
+              color: Colors.white,
+            ),
+          ),
+          TextButton(
+            style: style,
+            onPressed: () {},
+            child: const Icon(
+              Icons.person,
+              color: Colors.white
+            ),
+          ),
+          TextButton(
+            style: style,
+            onPressed: () {},
+            child: const Icon(
+              Icons.more_vert,
+              color: Colors.white
+            ),
+          ),
+        ],
       ),
       body: GridView.builder(
         itemCount: _items.length,
