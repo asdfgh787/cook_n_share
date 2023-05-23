@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cook_n_share/appbar.dart';
 import 'package:flutter/material.dart';
 
@@ -44,15 +48,41 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool shadowColor = false;
   double? scrolledUnderElevation;
+  var imageByte;
+
+  Image? letsgoo;
+  void obtenirImage(BuildContext context) async {
+    final Map jsonMap = {
+      "name": 'pizza', // can be used to make the search tab using post petition
+    };
+
+    final String url = 'http://10.0.2.2:5000/returnImage';
+    HttpClient httpClient = new HttpClient();
+    HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
+    request.headers.set('content-type', 'application/json');
+    request.add(utf8.encode(json.encode(jsonMap)));
+    HttpClientResponse response = await request.close();
+    String reply = await response.transform(utf8.decoder).join();
+    print('decode');
+    print(jsonDecode(reply));
+
+    setState(() {//still not working
+      imageByte = Uint8List.fromList(jsonDecode(reply)['image1']['imatge'].cast<int>());
+      letsgoo = Image.memory(
+          Uint8List.fromList(jsonDecode(reply)['image1']['imatge'].cast<int>()));
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    obtenirImage(context);
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final Color oddItemColor = colorScheme.primary.withOpacity(0.05);
     final ButtonStyle style = TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.onPrimary);
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
+
     return Scaffold(
       appBar: myAppBar(context),
       body: GridView.builder(
