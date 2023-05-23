@@ -1,3 +1,7 @@
+import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 final List<int> _items = List<int>.generate(51, (int index) => index);
@@ -53,8 +57,37 @@ class _MyHomePageState extends State<MyHomePage> {
   bool shadowColor = false;
   double? scrolledUnderElevation;
 
+  //Code to display an image
+  var imageByte;
+
+  Image? letsgoo;
+  void obtenirImage(BuildContext context) async {
+    final Map jsonMap = {
+      "name": 'pizza', // can be used to make the search tab
+    };
+
+    final String url = 'http://10.0.2.2:5000/returnImage';
+    //final String url = 'http://127.0.0.1:5000/returnImage';
+    HttpClient httpClient = new HttpClient();
+    HttpClientRequest request = await httpClient.postUrl(Uri.parse(url));
+    request.headers.set('content-type', 'application/json');
+    request.add(utf8.encode(json.encode(jsonMap)));
+    HttpClientResponse response = await request.close();
+    String reply = await response.transform(utf8.decoder).join();
+    print('decode');
+    print(jsonDecode(reply));
+
+    setState(() {//still not working
+      imageByte = Uint8List.fromList(jsonDecode(reply)['image1']['imatge'].cast<int>());
+      letsgoo = Image.memory(
+          Uint8List.fromList(jsonDecode(reply)['image1']['imatge'].cast<int>()));
+    });
+    //httpClient.close();
+  }
+
   @override
   Widget build(BuildContext context) {
+    obtenirImage(context);
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final Color oddItemColor = colorScheme.primary.withOpacity(0.05);
     final ButtonStyle style = TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.onPrimary);
@@ -116,10 +149,19 @@ class _MyHomePageState extends State<MyHomePage> {
               borderRadius: BorderRadius.circular(20.0),
               color: oddItemColor,
             ),
-            child: Text('Item $index'),
+            child: letsgoo == null
+                ? Text('No image selected.')
+                : Image(
+              image: letsgoo!.image,
+              fit: BoxFit.contain,
+            ),
           );
         },
       ),
     );
   }
+
+
 }
+
+
