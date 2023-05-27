@@ -1,4 +1,8 @@
+import 'package:flutter/material.dart';
 import 'dart:convert';
+
+import 'package:flutter/services.dart';
+
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -6,7 +10,9 @@ import 'package:cook_n_share/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:cook_n_share/recepie_card.dart';
 
-final List<Recipe> recipes = [
+
+
+/*final List<Recipe> recipes = [
   Recipe(
       image: Image.network(
           'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
@@ -16,7 +22,7 @@ final List<Recipe> recipes = [
       likes: 121,
       steps: ['preparar la massa', 'afegir el tomaquet'],
       allergens: [])
-];
+];*/
 
 void main() {
   runApp(const MyApp());
@@ -79,6 +85,34 @@ class _HomePageState extends State<HomePage> {
   bool shadowColor = false;
   double? scrolledUnderElevation;
   var imageByte;
+  List<Recipe> _recipes = [];
+
+  Future<void> readJson() async {
+    final String response = await rootBundle.loadString('assets/recipes.json');
+    final data = await json.decode(response);
+    setState(() {
+      for(var i = 0; i < data["recipes"].length; i++){
+        _recipes.add(Recipe(
+            image: Image.network(
+                data["recipes"][i]["image"]),
+            name: data["recipes"][i]["name"],
+            user: data["recipes"][i]["user"],
+            ingredients: List<String>.from(data["recipes"][i]["ingredients"]),
+            likes: data["recipes"][i]["likes"],
+            steps: List<String>.from(data["recipes"][i]["steps"]),
+            allergens: List<String>.from(data["recipes"][i]["allergens"])));
+      }
+
+      print("..number of items ${_recipes.length}");
+    });
+  }
+
+  @override
+  void initState()
+  {
+    super.initState();
+    readJson();//call it over here
+  }
 
   Widget letsgoo = Image.asset('backend/im1.png');
   Text title = Text('');
@@ -136,7 +170,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: myAppBar(context),
       body: GridView.builder(
-        itemCount: recipes.length,
+        itemCount: _recipes.length,
         padding: const EdgeInsets.all(8.0),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 1,
@@ -155,9 +189,9 @@ class _HomePageState extends State<HomePage> {
             child: Column(
               children: [
                 Expanded(
-                  child: recipes[index].image,
+                  child: _recipes[index].image,
                 ),
-                Text(recipes[index].name),
+                Text(_recipes[index].name),
               ],
             ),
             // child: RecipeCard(
