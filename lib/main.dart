@@ -5,10 +5,40 @@ import 'dart:typed_data';
 import 'package:cook_n_share/appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:cook_n_share/recepie_card.dart';
-final List<int> _items = List<int>.generate(51, (int index) => index);
+
+final List<Recipe> recipes = [
+  Recipe(
+      image: Image.network(
+          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+      name: 'Pizza',
+      user: '@marta',
+      ingredients: ['farina', 'tomaquet'],
+      likes: 121,
+      steps: ['preparar la massa', 'afegir el tomaquet'],
+      allergens: [])
+];
 
 void main() {
   runApp(const MyApp());
+}
+
+class Recipe {
+  final Image image;
+  final String name;
+  final String user;
+  final List<String> ingredients;
+  final int likes;
+  final List<String> steps;
+  final List<String> allergens;
+
+  Recipe(
+      {required this.image,
+      required this.name,
+      required this.user,
+      required this.ingredients,
+      required this.likes,
+      required this.steps,
+      required this.allergens});
 }
 
 class MyApp extends StatelessWidget {
@@ -50,9 +80,7 @@ class _HomePageState extends State<HomePage> {
   double? scrolledUnderElevation;
   var imageByte;
 
-  Widget letsgoo = Image.file(
-    File('backend/im1.png'),
-  );
+  Widget letsgoo = Image.asset('backend/im1.png');
   Text title = Text('');
   Text user_name = Text('');
   Text likes = Text('0');
@@ -68,7 +96,7 @@ class _HomePageState extends State<HomePage> {
     request.add(utf8.encode(json.encode(jsonMap)));
     HttpClientResponse response = await request.close();
     String reply = await response.transform(utf8.decoder).join();
-    title = Text( jsonDecode(reply)['image1']['nom']);
+    title = Text(jsonDecode(reply)['image1']['nom']);
     user_name = Text(jsonDecode(reply)['image1']['user']);
     likes = Text(jsonDecode(reply)['image1']['likes'].toString());
 
@@ -99,7 +127,8 @@ class _HomePageState extends State<HomePage> {
     obtenirImage(context);
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
     final Color oddItemColor = colorScheme.primary.withOpacity(0.05);
-    final ButtonStyle style = TextButton.styleFrom(foregroundColor: Theme.of(context).colorScheme.onPrimary);
+    final ButtonStyle style = TextButton.styleFrom(
+        foregroundColor: Theme.of(context).colorScheme.onPrimary);
     // The Flutter framework has been optimized to make rerunning build methods
     // fast, so that you can just rebuild anything that needs updating rather
     // than having to individually change instances of widgets.
@@ -107,7 +136,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: myAppBar(context),
       body: GridView.builder(
-        itemCount: _items.length,
+        itemCount: recipes.length,
         padding: const EdgeInsets.all(8.0),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 1,
@@ -123,23 +152,31 @@ class _HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(20.0),
               color: oddItemColor,
             ),
-            child: RecipeCard(
-              title: title,
-              subtitle: user_name,
-              image: Image.asset('assets/im1.png'),
-              likeCount: likes,
-              button: ElevatedButton(
-                onPressed: () {
-                  // Handle button press
-                },
-                child: Text('Button'),
-              ),
-              icons: [
-                Icon(Icons.star),
-                Icon(Icons.favorite),
-                Icon(Icons.thumb_up),
+            child: Column(
+              children: [
+                Expanded(
+                  child: recipes[index].image,
+                ),
+                Text(recipes[index].name),
               ],
             ),
+            // child: RecipeCard(
+            //   title: title,
+            //   subtitle: user_name,
+            //   image: Image.asset('assets/im1.png'),
+            //   likeCount: likes,
+            //   button: ElevatedButton(
+            //     onPressed: () {
+            //       // Handle button press
+            //     },
+            //     child: Text('Button'),
+            //   ),
+            //   icons: [
+            //     Icon(Icons.star),
+            //     Icon(Icons.favorite),
+            //     Icon(Icons.thumb_up),
+            //   ],
+            // ),
           );
         },
       ),
