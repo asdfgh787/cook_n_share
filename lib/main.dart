@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:cook_n_share/appbar.dart';
 import 'package:flutter/material.dart';
-
+import 'package:cook_n_share/recepie_card.dart';
 final List<int> _items = List<int>.generate(51, (int index) => index);
 
 void main() {
@@ -50,7 +50,12 @@ class _HomePageState extends State<HomePage> {
   double? scrolledUnderElevation;
   var imageByte;
 
-  Image? letsgoo;
+  Widget letsgoo = Image.file(
+    File('backend/im1.png'),
+  );
+  Text title = Text('');
+  Text user_name = Text('');
+  Text likes = Text('0');
   void obtenirImage(BuildContext context) async {
     final Map jsonMap = {
       "name": 'pizza', // can be used to make the search tab using post petition
@@ -63,14 +68,30 @@ class _HomePageState extends State<HomePage> {
     request.add(utf8.encode(json.encode(jsonMap)));
     HttpClientResponse response = await request.close();
     String reply = await response.transform(utf8.decoder).join();
-    print('decode');
-    print(jsonDecode(reply));
+    title = Text( jsonDecode(reply)['image1']['nom']);
+    user_name = Text(jsonDecode(reply)['image1']['user']);
+    likes = Text(jsonDecode(reply)['image1']['likes'].toString());
 
+    /*
     setState(() {//still not working
-      imageByte = Uint8List.fromList(jsonDecode(reply)['image1']['imatge'].cast<int>());
-      letsgoo = Image.memory(
-          Uint8List.fromList(jsonDecode(reply)['image1']['imatge'].cast<int>()));
-    });
+
+      List<dynamic> imageData = jsonDecode(reply)['image1']['imatge'];
+      List<int> imageBytes = [];
+
+      for (dynamic innerList in imageData) {
+        for (dynamic value in innerList) {
+          if (value is int) {
+            imageBytes.add(value);
+          }
+        }
+      }
+
+      imageByte = Uint8List.fromList(imageBytes);
+      //letsgoo = Image.memory(Uint8List.fromList(imageBytes));
+    }
+
+    );
+  */
   }
 
   @override
@@ -102,7 +123,23 @@ class _HomePageState extends State<HomePage> {
               borderRadius: BorderRadius.circular(20.0),
               color: oddItemColor,
             ),
-            child: Text('Item $index'),
+            child: RecipeCard(
+              title: title,
+              subtitle: user_name,
+              image: Image.asset('assets/im1.png'),
+              likeCount: likes,
+              button: ElevatedButton(
+                onPressed: () {
+                  // Handle button press
+                },
+                child: Text('Button'),
+              ),
+              icons: [
+                Icon(Icons.star),
+                Icon(Icons.favorite),
+                Icon(Icons.thumb_up),
+              ],
+            ),
           );
         },
       ),
