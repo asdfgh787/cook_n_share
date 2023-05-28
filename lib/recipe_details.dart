@@ -1,4 +1,5 @@
 import 'package:cook_n_share/appbar.dart';
+import 'package:cook_n_share/recepie_card.dart';
 import 'package:cook_n_share/main.dart';
 import 'package:flutter/material.dart';
 

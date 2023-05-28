@@ -1,4 +1,5 @@
 import 'package:cook_n_share/profile.dart';
+import 'package:cook_n_share/search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -21,7 +22,12 @@ AppBar myAppBar(BuildContext context) {
     actions: <Widget>[
       TextButton(
         style: style,
-        onPressed: () {},
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const Search()),
+          );
+          },
         child: const Icon(
           Icons.search,
           color: Colors.white,
