@@ -1,3 +1,4 @@
+import 'package:cook_n_share/recipe_details.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 
@@ -7,10 +8,6 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cook_n_share/appbar.dart';
-import 'package:flutter/material.dart';
-import 'package:cook_n_share/recepie_card.dart';
-
-
 
 /*final List<Recipe> recipes = [
   Recipe(
@@ -33,9 +30,10 @@ class Recipe {
   final String name;
   final String user;
   final List<String> ingredients;
-  final int likes;
+  int likes;
   final List<String> steps;
   final List<String> allergens;
+  bool isLiked;
 
   Recipe(
       {required this.image,
@@ -44,7 +42,8 @@ class Recipe {
       required this.ingredients,
       required this.likes,
       required this.steps,
-      required this.allergens});
+      required this.allergens,
+      this.isLiked = false});
 }
 
 class MyApp extends StatelessWidget {
@@ -91,10 +90,9 @@ class _HomePageState extends State<HomePage> {
     final String response = await rootBundle.loadString('assets/recipes.json');
     final data = await json.decode(response);
     setState(() {
-      for(var i = 0; i < data["recipes"].length; i++){
+      for (var i = 0; i < data["recipes"].length; i++) {
         _recipes.add(Recipe(
-            image: Image.network(
-                data["recipes"][i]["image"]),
+            image: Image.network(data["recipes"][i]["image"]),
             name: data["recipes"][i]["name"],
             user: data["recipes"][i]["user"],
             ingredients: List<String>.from(data["recipes"][i]["ingredients"]),
@@ -108,16 +106,16 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  void initState()
-  {
+  void initState() {
     super.initState();
-    readJson();//call it over here
+    readJson(); //call it over here
   }
 
   Widget letsgoo = Image.asset('backend/im1.png');
   Text title = Text('');
   Text user_name = Text('');
   Text likes = Text('0');
+
   void obtenirImage(BuildContext context) async {
     final Map jsonMap = {
       "name": 'pizza', // can be used to make the search tab using post petition
@@ -174,24 +172,89 @@ class _HomePageState extends State<HomePage> {
         padding: const EdgeInsets.all(8.0),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 1,
-          childAspectRatio: 2.0,
+          childAspectRatio: 1.5,
           mainAxisSpacing: 10.0,
           crossAxisSpacing: 10.0,
         ),
         itemBuilder: (BuildContext context, int index) {
+          Recipe recipe = _recipes[index];
           return Container(
             alignment: Alignment.center,
-            // tileColor: _items[index].isOdd ? oddItemColor : evenItemColor,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20.0),
               color: oddItemColor,
             ),
             child: Column(
               children: [
-                Expanded(
-                  child: _recipes[index].image,
+                const SizedBox(height: 10),
+                Text(
+                  recipe.name,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-                Text(_recipes[index].name),
+                const SizedBox(height: 4),
+                Text(
+                  recipe.user,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    color: Colors.grey[200],
+                    child: Image(
+                      image: recipe.image.image,
+                      fit: BoxFit.cover,
+                      width: double.infinity, // Ocupar todo el ancho disponible
+                    ),
+                  ),
+                ),
+                Container(
+                  color: Colors.grey[100],
+                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            recipe.isLiked = !recipe.isLiked;
+                            if (recipe.isLiked) {
+                              recipe.likes++;
+                            } else {
+                              recipe.likes--;
+                            }
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[300],
+                        ),
+                        icon: Icon(Icons.favorite,
+                          color: recipe.isLiked ? Colors.red : Colors.white,),
+                        label: Text(recipe.likes.toString(),
+                            style: TextStyle(color: Colors.black)),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context,MaterialPageRoute(
+                            builder: (context) => RecipeDetailsScreen(recipe: recipe),
+                          ),
+                        );},
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey[300],
+                        ),
+                        child: const Text('Details',
+                            style: TextStyle(color: Colors.black)),
+                      ),
+                    ],
+                  ),
+                ),
+                // const SizedBox(height: 6),
               ],
             ),
             // child: RecipeCard(
