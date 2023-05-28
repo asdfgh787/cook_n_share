@@ -1,21 +1,58 @@
 import 'package:cook_n_share/appbar.dart';
+import 'package:cook_n_share/recepie_card.dart';
+import 'package:cook_n_share/recipe_details.dart';
 import 'package:flutter/material.dart';
 
+class User {
+  final String name;
+  final String alias;
+  int following;
+  int followers;
+  final Image image;
+  final List<Recipe> recipes;
+
+  User(
+      {required this.name,
+      required this.alias,
+      required this.following,
+      required this.followers,
+      required this.image,
+      required this.recipes});
+}
+
 class Profile extends StatefulWidget {
-  const Profile({super.key});
+  final bool isYourProfile;
+  final String userAlias;
+
+  Profile({super.key, required this.isYourProfile, required this.userAlias});
+
+  final User user = User(
+      name: 'Marta Gil',
+      alias: '@martagil',
+      following: 354,
+      followers: 546,
+      image: Image.network(
+          'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+      recipes: [
+        Recipe(
+            image: Image.network(
+                'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+            name: 'Pizza',
+            user: '@marta',
+            ingredients: ['farina', 'tomaquet'],
+            likes: 121,
+            steps: ['preparar la massa', 'afegir el tomaquet'],
+            allergens: [])
+      ]); //TODO: get the user info from backend using userAlias
 
   @override
-  State<Profile> createState() => _Profile();
+  State<Profile> createState() => _Profile(user: user);
 }
 
 class _Profile extends State<Profile> {
-  final List<String> items = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
-  ];
+  User user;
+
+  _Profile({required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +90,7 @@ class _Profile extends State<Profile> {
             // List
             ListView.builder(
               shrinkWrap: true,
-              itemCount: items.length,
+              itemCount: user.recipes.length,
               itemBuilder: (context, index) {
                 return Container(
                   height: 100, // Set the desired height
@@ -62,13 +99,12 @@ class _Profile extends State<Profile> {
                         EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
                     leading: Container(
                       width: 80,
-                      height: 150,
+                      height: 170,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(7.0),
                         image: DecorationImage(
                           // image: AssetImage('assets/item_image.jpg'),
-                          image: NetworkImage(
-                              'https://flutter.github.io/assets-for-api-docs/assets/widgets/owl.jpg'),
+                          image: user.recipes[index].image.image,
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -76,14 +112,23 @@ class _Profile extends State<Profile> {
                     title: Align(
                       alignment: Alignment.center,
                       child: Text(
-                        items[index],
-                        style: TextStyle(fontSize: 18),
+                        user.recipes[index].name,
+                        style: const TextStyle(fontSize: 18),
                       ),
                     ),
-                    trailing: Icon(Icons.arrow_forward),
+                    trailing: Column(children: const [
+                      SizedBox(height: 20.0),
+                      Icon(Icons.arrow_forward)
+                    ]),
                     onTap: () {
                       // Handle item selection
-                      print('Selected: ${items[index]}');
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              RecipeDetailsScreen(recipe: user.recipes[index]),
+                        ),
+                      );
                     },
                   ),
                 );

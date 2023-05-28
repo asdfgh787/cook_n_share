@@ -38,7 +38,7 @@ AppBar myAppBar(BuildContext context) {
         onPressed: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const Profile()),
+            MaterialPageRoute(builder: (context) => Profile(isYourProfile: true, userAlias: "@martagil")),
           );
         },
         child: const Icon(Icons.person, color: Colors.white),
