@@ -1,4 +1,5 @@
 import 'package:cook_n_share/appbar.dart';
+import 'package:cook_n_share/profile.dart';
 import 'package:cook_n_share/recepie_card.dart';
 import 'package:cook_n_share/main.dart';
 import 'package:flutter/material.dart';
@@ -18,7 +19,7 @@ class RecipeDetailsScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 30, right: 30, top: 18, bottom: 10),
+            padding: const EdgeInsets.only(left: 40, right: 40, top: 18, bottom: 10),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -33,11 +34,19 @@ class RecipeDetailsScreen extends StatelessWidget {
                           color: Colors.black87,
                         ),
                       ),
-                      Text(
-                        recipe.user,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          color: Colors.grey,
+                      TextButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => Profile(isYourProfile: false, userAlias: recipe.user)),
+                          );
+                        },
+                        child: Text(
+                          recipe.user,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
                     ],

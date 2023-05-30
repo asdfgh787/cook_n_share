@@ -1,3 +1,4 @@
+import 'package:cook_n_share/profile.dart';
 import 'package:flutter/material.dart';
 import 'package:cook_n_share/recipe_details.dart';
 
@@ -53,124 +54,134 @@ class _RecipeCard extends State<RecipeCard> {
         foregroundColor: Theme.of(context).colorScheme.onPrimary);
 
     return recipes.isEmpty
-      ? const Center(child: CircularProgressIndicator(),)
-      : GridView.builder(
-        itemCount: recipes.length,
-        padding: const EdgeInsets.all(8.0),
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 1,
-          childAspectRatio: 1.5,
-          mainAxisSpacing: 10.0,
-          crossAxisSpacing: 10.0,
-        ),
-        itemBuilder: (BuildContext context, int index) {
-          Recipe recipe = recipes[index];
-          return Container(
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              color: oddItemColor,
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : GridView.builder(
+            itemCount: recipes.length,
+            padding: const EdgeInsets.all(8.0),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 1,
+              childAspectRatio: 1.5,
+              mainAxisSpacing: 10.0,
+              crossAxisSpacing: 10.0,
             ),
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                Text(
-                  recipe.name,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
+            itemBuilder: (BuildContext context, int index) {
+              Recipe recipe = recipes[index];
+              return Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.0),
+                  color: oddItemColor,
                 ),
-                const SizedBox(height: 4),
-                Text(
-                  recipe.user,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 12),
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 10),
-                    color: Colors.grey[200],
-                    child: Image(
-                      image: recipe.image.image,
-                      fit: BoxFit.cover,
-                      width: double
-                          .infinity, // Ocupar todo el ancho disponible
+                child: Column(
+                  children: [
+                    const SizedBox(height: 10),
+                    Text(
+                      recipe.name,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ),
-                Container(
-                  color: Colors.grey[100],
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton.icon(
-                        onPressed: () {
-                          setState(() {
-                            recipe.isLiked = !recipe.isLiked;
-                            if (recipe.isLiked) {
-                              recipe.likes++;
-                            } else {
-                              recipe.likes--;
-                            }
-                          });
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[300],
+                    const SizedBox(height: 4),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Profile(isYourProfile: false, userAlias: recipe.user)),
+                        );
+                      },
+                      child: Text(
+                        recipe.user,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
                         ),
-                        icon: Icon(
-                          Icons.favorite,
-                          color: recipe.isLiked ? Colors.red : Colors.white,
-                        ),
-                        label: Text(recipe.likes.toString(),
-                            style: TextStyle(color: Colors.black)),
                       ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  RecipeDetailsScreen(recipe: recipe),
+                    ),
+                    const SizedBox(height: 12),
+                    Expanded(
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 10),
+                        color: Colors.grey[200],
+                        child: Image(
+                          image: recipe.image.image,
+                          fit: BoxFit.cover,
+                          width: double
+                              .infinity, // Ocupar todo el ancho disponible
+                        ),
+                      ),
+                    ),
+                    Container(
+                      color: Colors.grey[100],
+                      padding:
+                          EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          ElevatedButton.icon(
+                            onPressed: () {
+                              setState(() {
+                                recipe.isLiked = !recipe.isLiked;
+                                if (recipe.isLiked) {
+                                  recipe.likes++;
+                                } else {
+                                  recipe.likes--;
+                                }
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey[300],
                             ),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey[300],
-                        ),
-                        child: const Text('Details',
-                            style: TextStyle(color: Colors.black)),
+                            icon: Icon(
+                              Icons.favorite,
+                              color: recipe.isLiked ? Colors.red : Colors.white,
+                            ),
+                            label: Text(recipe.likes.toString(),
+                                style: TextStyle(color: Colors.black)),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      RecipeDetailsScreen(recipe: recipe),
+                                ),
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey[300],
+                            ),
+                            child: const Text('Details',
+                                style: TextStyle(color: Colors.black)),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                    // const SizedBox(height: 6),
+                  ],
                 ),
-                // const SizedBox(height: 6),
-              ],
-            ),
-            // child: RecipeCard(
-            //   title: title,
-            //   subtitle: user_name,
-            //   image: Image.asset('assets/im1.png'),
-            //   likeCount: likes,
-            //   button: ElevatedButton(
-            //     onPressed: () {
-            //       // Handle button press
-            //     },
-            //     child: Text('Button'),
-            //   ),
-            //   icons: [
-            //     Icon(Icons.star),
-            //     Icon(Icons.favorite),
-            //     Icon(Icons.thumb_up),
-            //   ],
-            // ),
+                // child: RecipeCard(
+                //   title: title,
+                //   subtitle: user_name,
+                //   image: Image.asset('assets/im1.png'),
+                //   likeCount: likes,
+                //   button: ElevatedButton(
+                //     onPressed: () {
+                //       // Handle button press
+                //     },
+                //     child: Text('Button'),
+                //   ),
+                //   icons: [
+                //     Icon(Icons.star),
+                //     Icon(Icons.favorite),
+                //     Icon(Icons.thumb_up),
+                //   ],
+                // ),
+              );
+            },
           );
-        },
-      );
   }
 }

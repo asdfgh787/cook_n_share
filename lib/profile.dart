@@ -86,7 +86,79 @@ class _Profile extends State<Profile> {
                 const SizedBox(height: 20, width: 20),
               ],
             ),
-            const SizedBox(height: 20.0),
+            const SizedBox(height: 40.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                    child: Column(
+                      children: const [
+                        Text(
+                          'Follows',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 8.0),
+                        Text(
+                          '500',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16.0),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 10.0),
+                    child: Column(
+                      children: const [
+                        Text(
+                          'Followers',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(height: 8.0),
+                        Text(
+                          '1000',
+                          style: TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 25.0),
+            // Post Button
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () {},
+                child: user.alias == '@martagil'? const Text('POST'): const Text('Follow'),
+              ),
+            ),
+            const SizedBox(height: 16.0),
             // List
             ListView.builder(
               shrinkWrap: true,
@@ -95,8 +167,8 @@ class _Profile extends State<Profile> {
                 return Container(
                   height: 100, // Set the desired height
                   child: ListTile(
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 6.0, horizontal: 10.0),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 6.0, horizontal: 10.0),
                     leading: Container(
                       width: 80,
                       height: 170,
