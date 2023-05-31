@@ -12,7 +12,7 @@ AppBar myAppBar(BuildContext context) {
   double? scrolledUnderElevation;
 
   return AppBar(
-    title: Text(title),
+    title: Text(title, style: TextStyle(fontSize: 15),),
     leading: IconButton(
       icon: Icon(Icons.arrow_back, color: Colors.white),
       onPressed: () => Navigator.of(context).pop(),

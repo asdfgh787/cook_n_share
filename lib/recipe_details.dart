@@ -30,7 +30,7 @@ class RecipeDetailsScreen extends StatelessWidget {
                       Text(
                         recipe.name,
                         style: const TextStyle(
-                          fontSize: 30,
+                          fontSize: 23,
                           color: Colors.black87,
                         ),
                       ),
@@ -44,7 +44,7 @@ class RecipeDetailsScreen extends StatelessWidget {
                         child: Text(
                           recipe.user,
                           style: const TextStyle(
-                            fontSize: 18,
+                            fontSize: 12,
                             color: Colors.grey,
                           ),
                         ),
